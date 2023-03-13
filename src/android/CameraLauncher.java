@@ -523,9 +523,9 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
 
             this.processPicture(bitmap, this.encodingType);
 
-            if (!this.saveToPhotoAlbum) {
-                checkForDuplicateImage(DATA_URL);
-            }
+            // if (!this.saveToPhotoAlbum) {
+            //     checkForDuplicateImage(DATA_URL);
+            // }
         }
 
         // If sending filename back
@@ -589,7 +589,7 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
             throw new IllegalStateException();
         }
 
-        this.cleanup(FILE_URI, this.imageUri, galleryUri, bitmap);
+        // this.cleanup(FILE_URI, this.imageUri, galleryUri, bitmap);
         bitmap = null;
     }
 
@@ -1197,22 +1197,22 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
      *
      * @param newImage
      */
-    private void cleanup(int imageType, Uri oldImage, Uri newImage, Bitmap bitmap) {
-        if (bitmap != null) {
-            bitmap.recycle();
-        }
+    // private void cleanup(int imageType, Uri oldImage, Uri newImage, Bitmap bitmap) {
+    //     if (bitmap != null) {
+    //         bitmap.recycle();
+    //     }
 
-        // Clean up initial camera-written image file.
-        (new File(FileHelper.stripFileProtocol(oldImage.toString()))).delete();
+    //     // Clean up initial camera-written image file.
+    //     (new File(FileHelper.stripFileProtocol(oldImage.toString()))).delete();
 
-        checkForDuplicateImage(imageType);
-        // Scan for the gallery to update pic refs in gallery
-        if (this.saveToPhotoAlbum && newImage != null) {
-            this.scanForGallery(newImage);
-        }
+    //     checkForDuplicateImage(imageType);
+    //     // Scan for the gallery to update pic refs in gallery
+    //     if (this.saveToPhotoAlbum && newImage != null) {
+    //         this.scanForGallery(newImage);
+    //     }
 
-        System.gc();
-    }
+    //     System.gc();
+    // }
 
     /**
      * Used to find out if we are in a situation where the Camera Intent adds to images
@@ -1221,28 +1221,28 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
      *
      * @param type FILE_URI or DATA_URL
      */
-    private void checkForDuplicateImage(int type) {
-        int diff = 1;
-        Uri contentStore = whichContentStore();
-        Cursor cursor = queryImgDB(contentStore);
-        int currentNumOfImages = cursor.getCount();
+    // private void checkForDuplicateImage(int type) {
+    //     int diff = 1;
+    //     Uri contentStore = whichContentStore();
+    //     Cursor cursor = queryImgDB(contentStore);
+    //     int currentNumOfImages = cursor.getCount();
 
-        if (type == FILE_URI && this.saveToPhotoAlbum) {
-            diff = 2;
-        }
+    //     if (type == FILE_URI && this.saveToPhotoAlbum) {
+    //         diff = 2;
+    //     }
 
-        // delete the duplicate file if the difference is 2 for file URI or 1 for Data URL
-        if ((currentNumOfImages - numPics) == diff) {
-            cursor.moveToLast();
-            int id = Integer.valueOf(cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media._ID)));
-            if (diff == 2) {
-                id--;
-            }
-            Uri uri = Uri.parse(contentStore + "/" + id);
-            this.cordova.getActivity().getContentResolver().delete(uri, null, null);
-            cursor.close();
-        }
-    }
+    //     // delete the duplicate file if the difference is 2 for file URI or 1 for Data URL
+    //     if ((currentNumOfImages - numPics) == diff) {
+    //         cursor.moveToLast();
+    //         int id = Integer.valueOf(cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media._ID)));
+    //         if (diff == 2) {
+    //             id--;
+    //         }
+    //         Uri uri = Uri.parse(contentStore + "/" + id);
+    //         this.cordova.getActivity().getContentResolver().delete(uri, null, null);
+    //         cursor.close();
+    //     }
+    // }
 
     /**
      * Determine if we are storing the images in internal or external storage
